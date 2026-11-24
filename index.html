@@ -135,6 +135,8 @@ code{background:#EEEBE4;border-radius:4px;padding:0 4px;font-size:12px}
   <span class="spacer"></span>
   <button class="btn primary" id="btnAdd">＋ 新增卡片</button>
   <button class="btn blue" id="btnRoute">⟳ 更新路線</button>
+  <button class="btn primary" id="btnGh" title="把目前的行程存成 repo 裡的 trip.json">☁ 儲存到 GitHub</button>
+  <button class="btn small" id="btnGhSet" title="GitHub 設定">⚙</button>
   <button class="btn" id="btnExport">匯出</button>
   <button class="btn" id="btnImport">匯入</button>
   <input type="file" id="importFile" accept="application/json" hidden>
@@ -221,6 +223,38 @@ code{background:#EEEBE4;border-radius:4px;padding:0 4px;font-size:12px}
   </form>
 </div>
 
+<!-- github modal -->
+<div class="modal hidden" id="ghModal">
+  <form class="sheet" id="ghForm">
+    <h2>儲存到 GitHub 的設定</h2>
+    <div class="keyhelp">
+      需要一把 GitHub <b>Fine-grained personal access token</b>：
+      <ol>
+        <li>GitHub 右上角頭像 → Settings → Developer settings → Personal access tokens → <b>Fine-grained tokens</b> → Generate new token</li>
+        <li>Expiration：選 30 或 90 天</li>
+        <li>Repository access：<b>Only select repositories</b> → 只選 <code>trip_planner</code></li>
+        <li>Permissions → Repository permissions → <b>Contents：Read and write</b>（其他都不用開）</li>
+        <li>產生後複製 <code>github_pat_...</code> 貼到下面</li>
+      </ol>
+      <div style="margin-top:6px">Token 只會存在<b>這個瀏覽器</b>，不會寫進網頁檔案，家人那邊看不到。只在你自己的電腦上設定。</div>
+    </div>
+    <div class="f"><label>Token</label><input id="ghToken" placeholder="github_pat_..." autocomplete="off"></div>
+    <div class="grid2">
+      <div class="f"><label>帳號（owner）</label><input id="ghOwner" placeholder="自動偵測"></div>
+      <div class="f"><label>Repo</label><input id="ghRepo" placeholder="trip_planner"></div>
+    </div>
+    <div class="grid2">
+      <div class="f"><label>Branch</label><input id="ghBranch" placeholder="main"></div>
+      <div class="f"><label>檔案路徑</label><input id="ghPath" placeholder="trip.json"></div>
+    </div>
+    <div class="foot">
+      <button class="btn danger left" type="button" id="ghClear">清除 Token</button>
+      <button class="btn" type="button" id="ghCancel">取消</button>
+      <button class="btn primary" type="submit">儲存設定</button>
+    </div>
+  </form>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -265,42 +299,357 @@ const P = (name, lat, lng) => ({name, lat, lng, approx:true});
 
 /* ============ default data ============ */
 function defaultCards(){
-  const c = (day, start, end, title, cat, place=null, note='') => ({id:uid(), day, start, end, title, cat, place, note});
-  return [
-    c(0,'09:00','18:00','Leo 上班','work',null,'家人白天自由行'),
-    c(0,'10:30','14:00','（建議）大稻埕・迪化街','outdoor',P('迪化街',25.0577,121.5099),'家人自己去；搭捷運到北門站或大橋頭站'),
-    c(0,'19:00','20:30','接風晚餐（待定）','eat',null,''),
-
-    c(1,'09:00','18:00','Leo 上班','work',null,''),
-    c(1,'10:30','15:00','（建議）松山文創園區','indoor',P('松山文創園區',25.0439,121.5606),'家人自由行；下雨也可以去'),
-    c(1,'18:30','19:30','板橋晚餐（待定）','eat',P('板橋車站',25.0143,121.4635),'下班後會合'),
-    c(1,'19:30','21:30','新北歡樂耶誕城','night',P('新北市市民廣場',25.0123,121.4648),'亮燈 17:30–23:00；週五晚上人多'),
-
-    c(2,'10:00','11:00','路過看投票','other',null,'投票時間 08:00–16:00；可以選一個投票所（地點自己補）'),
-    c(2,'11:30','12:30','午餐（大稻埕一帶）','eat',P('大稻埕碼頭',25.0566,121.5086),''),
-    c(2,'12:30','15:30','河濱公園騎腳踏車＋市集','outdoor',P('大稻埕碼頭',25.0566,121.5086),'YouBike 可以甲地借乙地還'),
-    c(2,'16:00','17:30','投票所看開票','other',null,'16:00 開始開票（地點自己補）'),
-    c(2,'18:00','20:00','晚餐：火鍋／薑母鴨','eat',null,'開票夜人很多，要先訂位；挑有電視的店'),
-    c(2,'20:00','22:00','看開票結果','other',null,''),
-
-    c(3,'10:30','11:00','搭捷運到淡水','transit',P('淡水捷運站',25.1680,121.4455),''),
-    c(3,'11:00','12:45','淡水老街＋午餐','eat',P('淡水老街',25.1700,121.4395),''),
-    c(3,'13:00','14:30','淡江大橋走路／騎車到八里','outdoor',P('淡江大橋',25.1760,121.4100),'風大可能封閉人行道，出發前先查；YouBike 電輔車可以上橋'),
-    c(3,'14:45','16:15','八里左岸・十三行博物館','outdoor',P('十三行博物館',25.1530,121.4050),''),
-    c(3,'16:30','17:15','八里渡船頭看夕陽→渡輪回淡水','outdoor',P('八里渡船頭',25.1585,121.4335),'日落大約 17:05'),
-    c(3,'18:15','20:30','皇池溫泉（大眾池）＋藥膳粥','relax',P('皇池溫泉',25.1360,121.5310),'大眾池全裸、男女分開；行義路假日晚上停車難'),
-
-    c(4,'09:00','18:00','Leo 上班','work',null,''),
-    c(4,'10:30','15:30','（建議）新北市美術館＋三峽老街','indoor',P('新北市美術館',24.9590,121.3530),'家人自由行'),
-    c(4,'19:00','21:00','晚餐：響響（已訂位）','eat',null,'地點自己補'),
-
-    c(5,'09:00','18:00','Leo 上班','work',null,''),
-    c(5,'10:00','15:00','（建議）猴硐貓村','outdoor',P('猴硐車站',25.0870,121.8270),'家人自由行；台鐵到猴硐站'),
-
-    c(6,'09:00','18:00','Leo 上班','work',null,''),
-    c(6,'12:00','13:00','家人回程（時間待定）','transit',null,''),
-  ];
+  return JSON.parse(JSON.stringify(DEFAULT_CARDS));
 }
+const DEFAULT_CARDS = [
+  {
+    "id": "u1za6nbg",
+    "day": 0,
+    "start": "09:00",
+    "end": "18:00",
+    "title": "Leo 上班",
+    "cat": "work",
+    "place": null,
+    "note": "家人白天自由行"
+  },
+  {
+    "id": "1gs7un3u",
+    "day": 0,
+    "start": "21:00",
+    "end": "23:00",
+    "title": "晚餐：八條老宅",
+    "cat": "eat",
+    "place": {
+      "name": "八條老宅麻辣鍋",
+      "address": "104臺北市中山區正義里林森北路133巷3號",
+      "lat": 25.051132,
+      "lng": 121.5254888,
+      "placeId": "ChIJUUp8Vm-pQjQRQIVDxFaJEgo"
+    },
+    "note": "已訂"
+  },
+  {
+    "id": "ri8swfdj",
+    "day": 1,
+    "start": "09:00",
+    "end": "18:00",
+    "title": "Leo 上班",
+    "cat": "work",
+    "place": null,
+    "note": ""
+  },
+  {
+    "id": "lcd2hr4x",
+    "day": 2,
+    "start": "19:30",
+    "end": "20:30",
+    "title": "新北歡樂耶誕城",
+    "cat": "night",
+    "place": {
+      "name": "新北市市民廣場",
+      "address": "220新北市板橋區福丘里中山路一段161號",
+      "lat": 25.0130974,
+      "lng": 121.46509019999999,
+      "placeId": "ChIJq2QwKRmoQjQRMpx-0D_asa4",
+      "approx": false
+    },
+    "note": "亮燈 17:30–23:00；週五晚上人多"
+  },
+  {
+    "id": "bg40232k",
+    "day": 2,
+    "start": "16:00",
+    "end": "17:30",
+    "title": "投票所看開票",
+    "cat": "other",
+    "place": null,
+    "note": "16:00 開始開票（地點自己補）"
+  },
+  {
+    "id": "n84pk8ke",
+    "day": 2,
+    "start": "19:30",
+    "end": "21:30",
+    "title": "晚餐：六必居",
+    "cat": "eat",
+    "place": {
+      "name": "六必居潮州一品沙鍋粥 (民權店)/板橋美食",
+      "address": "220新北市板橋區福丘里民權路3號",
+      "lat": 25.0100011,
+      "lng": 121.4628738,
+      "placeId": "ChIJNZKIdx6oQjQRdPECsfSu_Rs"
+    },
+    "note": "已經訂位"
+  },
+  {
+    "id": "vopku3ee",
+    "day": 3,
+    "start": "10:00",
+    "end": "12:00",
+    "title": "早餐：大稻埕",
+    "cat": "eat",
+    "place": {
+      "name": "台北大稻埕",
+      "address": "103臺北市大同區",
+      "lat": 25.058228999999997,
+      "lng": 121.50965469999998,
+      "placeId": "ChIJG0nRuJapQjQRoyjbKbS8JvY"
+    },
+    "note": ""
+  },
+  {
+    "id": "65yo75jm",
+    "day": 3,
+    "start": "12:00",
+    "end": "13:00",
+    "title": "大稻埕 - 紅樹林",
+    "cat": "transit",
+    "place": {
+      "name": "捷運紅樹林站",
+      "address": "251台灣新北市淡水區",
+      "lat": 25.154684,
+      "lng": 121.45948000000001,
+      "placeId": "ChIJp9TE-JKvQjQRG_6axUMzxGE"
+    },
+    "note": ""
+  },
+  {
+    "id": "x30f9stf",
+    "day": 3,
+    "start": "13:40",
+    "end": "14:00",
+    "title": "漁人碼頭",
+    "cat": "outdoor",
+    "place": {
+      "name": "淡水漁人碼頭",
+      "address": "251新北市淡水區沙崙里觀海路",
+      "lat": 25.183009199999997,
+      "lng": 121.41210839999998,
+      "placeId": "ChIJY0IVMS6lQjQRoEDkhKz2QTI"
+    },
+    "note": ""
+  },
+  {
+    "id": "zrgpcjhb",
+    "day": 3,
+    "start": "14:00",
+    "end": "14:50",
+    "title": "淡江大橋",
+    "cat": "outdoor",
+    "place": {
+      "name": "淡水觀海長堤",
+      "address": "251新北市淡水區中正路一段87巷",
+      "lat": 25.180658299999997,
+      "lng": 121.4181733,
+      "placeId": "ChIJ3f-I3DalQjQRW3eQZ8s1b4Y"
+    },
+    "note": "日落大約 17:05"
+  },
+  {
+    "id": "e1cx6lbo",
+    "day": 3,
+    "start": "20:30",
+    "end": "22:10",
+    "title": "春天酒店的露天風呂",
+    "cat": "relax",
+    "place": {
+      "name": "Spring City Resort 春天酒店",
+      "address": "112臺北市北投區林泉里幽雅路18號",
+      "lat": 25.137598,
+      "lng": 121.51356100000001,
+      "placeId": "ChIJFf35ckKuQjQR5sXfjE4S2RI"
+    },
+    "note": ""
+  },
+  {
+    "id": "aqlvy28j",
+    "day": 4,
+    "start": "09:00",
+    "end": "18:00",
+    "title": "Leo 上班",
+    "cat": "work",
+    "place": null,
+    "note": ""
+  },
+  {
+    "id": "p53xupgm",
+    "day": 4,
+    "start": "19:00",
+    "end": "21:00",
+    "title": "晚餐：響響",
+    "cat": "eat",
+    "place": {
+      "name": "饗饗 微風信義店",
+      "address": "110台北市信义区兴雅里忠孝東路五段68號46樓微風信義",
+      "lat": 25.0405099,
+      "lng": 121.56716370000001,
+      "placeId": "ChIJ6ere6rurQjQRCmicPiS523g"
+    },
+    "note": "已訂位"
+  },
+  {
+    "id": "6vcg6n9v",
+    "day": 5,
+    "start": "09:00",
+    "end": "18:00",
+    "title": "Leo 上班",
+    "cat": "work",
+    "place": null,
+    "note": ""
+  },
+  {
+    "id": "21grkh8w",
+    "day": 5,
+    "start": "12:00",
+    "end": "13:00",
+    "title": "家人回程（時間待定）",
+    "cat": "transit",
+    "place": null,
+    "note": ""
+  },
+  {
+    "id": "kbefeuea",
+    "day": 3,
+    "start": "14:50",
+    "end": "17:30",
+    "title": "八里渡船頭老街",
+    "cat": "outdoor",
+    "place": {
+      "name": "八里渡船頭老街",
+      "address": "249新北市八里區米倉里渡船頭街",
+      "lat": 25.158442899999997,
+      "lng": 121.4347089,
+      "placeId": "ChIJf9weG2alQjQRNlsOIbBhu6E"
+    },
+    "note": ""
+  },
+  {
+    "id": "pfxqrele",
+    "day": 1,
+    "start": "18:00",
+    "end": "21:30",
+    "title": "選前之夜",
+    "cat": "outdoor",
+    "place": {
+      "name": "仁愛路四段",
+      "address": "臺北市仁愛路四段",
+      "lat": 25.0378148,
+      "lng": 121.5536584,
+      "placeId": "ChIJX0zfMM-rQjQRbntVhwPKIjE"
+    },
+    "note": ""
+  },
+  {
+    "id": "ha5ufdk0",
+    "day": 3,
+    "start": "17:30",
+    "end": "18:00",
+    "title": "淡水渡船碼頭",
+    "cat": "outdoor",
+    "place": {
+      "name": "淡水渡船碼頭",
+      "address": "251台灣新北市淡水區",
+      "lat": 25.170022,
+      "lng": 121.438796,
+      "placeId": "ChIJMU2uNFqlQjQRzBWVym675Mc"
+    },
+    "note": ""
+  },
+  {
+    "id": "npwy50y0",
+    "day": 3,
+    "start": "06:00",
+    "end": "18:30",
+    "title": "淡水老街",
+    "cat": "outdoor",
+    "place": {
+      "name": "淡水老街",
+      "address": "251新北市淡水區草東里中正路, 重建街, 清水街一帶",
+      "lat": 25.168927,
+      "lng": 121.44409209999999,
+      "placeId": "ChIJkf3MYFilQjQRxSE-z1AbDKQ"
+    },
+    "note": ""
+  },
+  {
+    "id": "nh2fr6g4",
+    "day": 3,
+    "start": "14:50",
+    "end": "15:50",
+    "title": "下午茶",
+    "cat": "eat",
+    "place": null,
+    "note": ""
+  },
+  {
+    "id": "ibxcyf95",
+    "day": 3,
+    "start": "19:00",
+    "end": "20:00",
+    "title": "晚餐",
+    "cat": "eat",
+    "place": null,
+    "note": ""
+  },
+  {
+    "id": "ounlvmyw",
+    "day": 2,
+    "start": "10:00",
+    "end": "11:00",
+    "title": "早餐：沅保奶茶店",
+    "cat": "eat",
+    "place": {
+      "name": "沅保奶茶店",
+      "address": "235新北市中和區忠孝里華新街71號",
+      "lat": 24.9839742,
+      "lng": 121.50817699999999,
+      "placeId": "ChIJyUK0f24CaDQRDJUm0wCpGBY"
+    },
+    "note": ""
+  },
+  {
+    "id": "38kyxcyu",
+    "day": 2,
+    "start": "12:00",
+    "end": "",
+    "title": "烘爐地南山福德宮",
+    "cat": "outdoor",
+    "place": {
+      "name": "烘爐地南山福德宮",
+      "address": "235新北市中和區內南里興南路二段399巷160-1號",
+      "lat": 24.971790199999997,
+      "lng": 121.497645,
+      "placeId": "ChIJGwKL-VsCaDQRdL-5PNoFWhw"
+    },
+    "note": ""
+  },
+  {
+    "id": "fl2glk5x",
+    "day": 2,
+    "start": "16:00",
+    "end": "17:00",
+    "title": "林本源園邸",
+    "cat": "outdoor",
+    "place": {
+      "name": "林本源園邸",
+      "address": "220新北市板橋區留侯里西門街9號",
+      "lat": 25.011081400000002,
+      "lng": 121.4546023,
+      "placeId": "ChIJ-bWxkQKoQjQRclXL_gr5kbg"
+    },
+    "note": ""
+  },
+  {
+    "id": "o9vmg68y",
+    "day": 2,
+    "start": "15:00",
+    "end": "",
+    "title": "午餐：板橋",
+    "cat": "eat",
+    "place": null,
+    "note": ""
+  }
+];
 
 /* ============ state ============ */
 let state = load();
@@ -707,6 +1056,70 @@ $('#btnRoute').onclick = async ()=>{
     save(); renderTimeline(); drawMap(true);
     toast(fail ? `完成，但有 ${fail} 段算不出路線（可能是 Routes API 沒開，或那個時段沒有班次）` : `路線已更新（${pairs.length} 段）`, 4500);
   }finally{ btn.disabled=false; btn.textContent='⟳ 更新路線'; }
+};
+
+/* ============ save to GitHub ============ */
+const GH_KEY = 'tpe-family-trip-github';
+function ghGuess(){
+  const host = location.hostname, m = host.match(/^([^.]+)\.github\.io$/i);
+  const seg = location.pathname.split('/').filter(Boolean)[0];
+  return { owner: m ? m[1] : '', repo: (m && seg && !seg.includes('.')) ? seg : 'trip_planner' };
+}
+function ghCfg(){
+  let c = {}; try{ c = JSON.parse(lsGet(GH_KEY)||'{}'); }catch(e){}
+  const g = ghGuess();
+  return { token:c.token||'', owner:c.owner||g.owner, repo:c.repo||g.repo, branch:c.branch||'main', path:c.path||REMOTE_JSON };
+}
+function openGh(){
+  const c = ghCfg();
+  $('#ghToken').value=c.token; $('#ghOwner').value=c.owner; $('#ghRepo').value=c.repo; $('#ghBranch').value=c.branch; $('#ghPath').value=c.path;
+  $('#ghModal').classList.remove('hidden');
+}
+$('#btnGhSet').onclick = openGh;
+$('#ghCancel').onclick = ()=>$('#ghModal').classList.add('hidden');
+$('#ghClear').onclick = ()=>{ const c=ghCfg(); c.token=''; lsSet(GH_KEY, JSON.stringify(c)); $('#ghToken').value=''; toast('已清除 Token'); };
+$('#ghForm').onsubmit = e=>{
+  e.preventDefault();
+  const c = { token:$('#ghToken').value.trim(), owner:$('#ghOwner').value.trim(), repo:$('#ghRepo').value.trim()||'trip_planner', branch:$('#ghBranch').value.trim()||'main', path:$('#ghPath').value.trim()||REMOTE_JSON };
+  lsSet(GH_KEY, JSON.stringify(c)); $('#ghModal').classList.add('hidden'); toast('GitHub 設定已儲存');
+};
+function b64utf8(str){
+  const bytes = new TextEncoder().encode(str); let bin='';
+  for(let i=0;i<bytes.length;i+=0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i,i+0x8000));
+  return btoa(bin);
+}
+async function ghRequest(c, method, body){
+  const url = `https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/contents/${c.path.split('/').map(encodeURIComponent).join('/')}` + (method==='GET' ? `?ref=${encodeURIComponent(c.branch)}` : '');
+  const res = await fetch(url, { method, headers:{ 'Authorization':`Bearer ${c.token}`, 'Accept':'application/vnd.github+json', 'X-GitHub-Api-Version':'2022-11-28', ...(body?{'Content-Type':'application/json'}:{}) }, body: body?JSON.stringify(body):undefined });
+  let data=null; try{ data = await res.json(); }catch(e){}
+  return {res, data};
+}
+$('#btnGh').onclick = async ()=>{
+  const c = ghCfg();
+  if(!c.token || !c.owner){ toast('先設定 GitHub Token 和帳號'); openGh(); return; }
+  const btn = $('#btnGh'); btn.disabled = true; btn.textContent = '儲存中…';
+  try{
+    const updatedAt = new Date().toISOString();
+    const content = b64utf8(JSON.stringify({updatedAt, cards:state.cards}, null, 2));
+    for(let attempt=0; attempt<2; attempt++){
+      const got = await ghRequest(c, 'GET');
+      if(got.res.status===401){ throw new Error('Token 無效或已過期'); }
+      if(!got.res.ok && got.res.status!==404){ throw new Error(`讀取失敗（${got.res.status}）：${got.data?.message||''}`); }
+      const sha = got.res.ok ? got.data.sha : undefined;
+      const put = await ghRequest(c, 'PUT', { message:`Update trip ${updatedAt.slice(0,16).replace('T',' ')}`, content, branch:c.branch, ...(sha?{sha}:{}) });
+      if(put.res.ok){
+        state.baseUpdatedAt = updatedAt; save();
+        toast('已儲存到 GitHub ✔ 約 1 分鐘後，家人重新整理就會看到', 5000);
+        return;
+      }
+      if(put.res.status===409 || put.res.status===422){ continue; } // sha 衝突，重抓一次
+      if(put.res.status===404 || put.res.status===403){ throw new Error('沒有權限：確認 token 有選到這個 repo，且 Contents 設為 Read and write'); }
+      throw new Error(`儲存失敗（${put.res.status}）：${put.data?.message||''}`);
+    }
+    throw new Error('檔案剛被別處修改，請再按一次');
+  }catch(err){
+    toast('GitHub：' + (err.message||err), 6500);
+  }finally{ btn.disabled=false; btn.textContent='☁ 儲存到 GitHub'; }
 };
 
 /* ============ boot ============ */
