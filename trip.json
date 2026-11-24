@@ -1,0 +1,352 @@
+{
+  "updatedAt": "2026-11-24T07:56:01.804Z",
+  "cards": [
+    {
+      "id": "u1za6nbg",
+      "day": 0,
+      "start": "09:00",
+      "end": "18:00",
+      "title": "Leo 上班",
+      "cat": "work",
+      "place": null,
+      "note": "家人白天自由行"
+    },
+    {
+      "id": "1gs7un3u",
+      "day": 0,
+      "start": "21:00",
+      "end": "23:00",
+      "title": "晚餐：八條老宅",
+      "cat": "eat",
+      "place": {
+        "name": "八條老宅麻辣鍋",
+        "address": "104臺北市中山區正義里林森北路133巷3號",
+        "lat": 25.051132,
+        "lng": 121.5254888,
+        "placeId": "ChIJUUp8Vm-pQjQRQIVDxFaJEgo"
+      },
+      "note": "已訂"
+    },
+    {
+      "id": "ri8swfdj",
+      "day": 1,
+      "start": "09:00",
+      "end": "18:00",
+      "title": "Leo 上班",
+      "cat": "work",
+      "place": null,
+      "note": ""
+    },
+    {
+      "id": "lcd2hr4x",
+      "day": 2,
+      "start": "19:30",
+      "end": "20:30",
+      "title": "新北歡樂耶誕城",
+      "cat": "night",
+      "place": {
+        "name": "新北市市民廣場",
+        "address": "220新北市板橋區福丘里中山路一段161號",
+        "lat": 25.0130974,
+        "lng": 121.46509019999999,
+        "placeId": "ChIJq2QwKRmoQjQRMpx-0D_asa4",
+        "approx": false
+      },
+      "note": "亮燈 17:30–23:00；週五晚上人多"
+    },
+    {
+      "id": "bg40232k",
+      "day": 2,
+      "start": "16:00",
+      "end": "17:30",
+      "title": "投票所看開票",
+      "cat": "other",
+      "place": null,
+      "note": "16:00 開始開票（地點自己補）"
+    },
+    {
+      "id": "n84pk8ke",
+      "day": 2,
+      "start": "19:30",
+      "end": "21:30",
+      "title": "晚餐：六必居",
+      "cat": "eat",
+      "place": {
+        "name": "六必居潮州一品沙鍋粥 (民權店)/板橋美食",
+        "address": "220新北市板橋區福丘里民權路3號",
+        "lat": 25.0100011,
+        "lng": 121.4628738,
+        "placeId": "ChIJNZKIdx6oQjQRdPECsfSu_Rs"
+      },
+      "note": "已經訂位"
+    },
+    {
+      "id": "vopku3ee",
+      "day": 3,
+      "start": "10:00",
+      "end": "12:00",
+      "title": "早餐：大稻埕",
+      "cat": "eat",
+      "place": {
+        "name": "台北大稻埕",
+        "address": "103臺北市大同區",
+        "lat": 25.058228999999997,
+        "lng": 121.50965469999998,
+        "placeId": "ChIJG0nRuJapQjQRoyjbKbS8JvY"
+      },
+      "note": ""
+    },
+    {
+      "id": "65yo75jm",
+      "day": 3,
+      "start": "12:00",
+      "end": "13:00",
+      "title": "大稻埕 - 紅樹林",
+      "cat": "transit",
+      "place": {
+        "name": "捷運紅樹林站",
+        "address": "251台灣新北市淡水區",
+        "lat": 25.154684,
+        "lng": 121.45948000000001,
+        "placeId": "ChIJp9TE-JKvQjQRG_6axUMzxGE"
+      },
+      "note": ""
+    },
+    {
+      "id": "x30f9stf",
+      "day": 3,
+      "start": "13:40",
+      "end": "14:00",
+      "title": "漁人碼頭",
+      "cat": "outdoor",
+      "place": {
+        "name": "淡水漁人碼頭",
+        "address": "251新北市淡水區沙崙里觀海路",
+        "lat": 25.183009199999997,
+        "lng": 121.41210839999998,
+        "placeId": "ChIJY0IVMS6lQjQRoEDkhKz2QTI"
+      },
+      "note": ""
+    },
+    {
+      "id": "zrgpcjhb",
+      "day": 3,
+      "start": "14:00",
+      "end": "14:50",
+      "title": "淡江大橋",
+      "cat": "outdoor",
+      "place": {
+        "name": "淡水觀海長堤",
+        "address": "251新北市淡水區中正路一段87巷",
+        "lat": 25.180658299999997,
+        "lng": 121.4181733,
+        "placeId": "ChIJ3f-I3DalQjQRW3eQZ8s1b4Y"
+      },
+      "note": "日落大約 17:05"
+    },
+    {
+      "id": "e1cx6lbo",
+      "day": 3,
+      "start": "20:30",
+      "end": "22:10",
+      "title": "春天酒店的露天風呂",
+      "cat": "relax",
+      "place": {
+        "name": "Spring City Resort 春天酒店",
+        "address": "112臺北市北投區林泉里幽雅路18號",
+        "lat": 25.137598,
+        "lng": 121.51356100000001,
+        "placeId": "ChIJFf35ckKuQjQR5sXfjE4S2RI"
+      },
+      "note": ""
+    },
+    {
+      "id": "aqlvy28j",
+      "day": 4,
+      "start": "09:00",
+      "end": "18:00",
+      "title": "Leo 上班",
+      "cat": "work",
+      "place": null,
+      "note": ""
+    },
+    {
+      "id": "p53xupgm",
+      "day": 4,
+      "start": "19:00",
+      "end": "21:00",
+      "title": "晚餐：響響",
+      "cat": "eat",
+      "place": {
+        "name": "饗饗 微風信義店",
+        "address": "110台北市信义区兴雅里忠孝東路五段68號46樓微風信義",
+        "lat": 25.0405099,
+        "lng": 121.56716370000001,
+        "placeId": "ChIJ6ere6rurQjQRCmicPiS523g"
+      },
+      "note": "已訂位"
+    },
+    {
+      "id": "6vcg6n9v",
+      "day": 5,
+      "start": "09:00",
+      "end": "18:00",
+      "title": "Leo 上班",
+      "cat": "work",
+      "place": null,
+      "note": ""
+    },
+    {
+      "id": "21grkh8w",
+      "day": 5,
+      "start": "12:00",
+      "end": "13:00",
+      "title": "家人回程（時間待定）",
+      "cat": "transit",
+      "place": null,
+      "note": ""
+    },
+    {
+      "id": "kbefeuea",
+      "day": 3,
+      "start": "14:50",
+      "end": "17:30",
+      "title": "八里渡船頭老街",
+      "cat": "outdoor",
+      "place": {
+        "name": "八里渡船頭老街",
+        "address": "249新北市八里區米倉里渡船頭街",
+        "lat": 25.158442899999997,
+        "lng": 121.4347089,
+        "placeId": "ChIJf9weG2alQjQRNlsOIbBhu6E"
+      },
+      "note": ""
+    },
+    {
+      "id": "pfxqrele",
+      "day": 1,
+      "start": "18:00",
+      "end": "21:30",
+      "title": "選前之夜",
+      "cat": "outdoor",
+      "place": {
+        "name": "仁愛路四段",
+        "address": "臺北市仁愛路四段",
+        "lat": 25.0378148,
+        "lng": 121.5536584,
+        "placeId": "ChIJX0zfMM-rQjQRbntVhwPKIjE"
+      },
+      "note": ""
+    },
+    {
+      "id": "ha5ufdk0",
+      "day": 3,
+      "start": "17:30",
+      "end": "18:00",
+      "title": "淡水渡船碼頭",
+      "cat": "outdoor",
+      "place": {
+        "name": "淡水渡船碼頭",
+        "address": "251台灣新北市淡水區",
+        "lat": 25.170022,
+        "lng": 121.438796,
+        "placeId": "ChIJMU2uNFqlQjQRzBWVym675Mc"
+      },
+      "note": ""
+    },
+    {
+      "id": "npwy50y0",
+      "day": 3,
+      "start": "06:00",
+      "end": "18:30",
+      "title": "淡水老街",
+      "cat": "outdoor",
+      "place": {
+        "name": "淡水老街",
+        "address": "251新北市淡水區草東里中正路, 重建街, 清水街一帶",
+        "lat": 25.168927,
+        "lng": 121.44409209999999,
+        "placeId": "ChIJkf3MYFilQjQRxSE-z1AbDKQ"
+      },
+      "note": ""
+    },
+    {
+      "id": "nh2fr6g4",
+      "day": 3,
+      "start": "14:50",
+      "end": "15:50",
+      "title": "下午茶",
+      "cat": "eat",
+      "place": null,
+      "note": ""
+    },
+    {
+      "id": "ibxcyf95",
+      "day": 3,
+      "start": "19:00",
+      "end": "20:00",
+      "title": "晚餐",
+      "cat": "eat",
+      "place": null,
+      "note": ""
+    },
+    {
+      "id": "ounlvmyw",
+      "day": 2,
+      "start": "10:00",
+      "end": "11:00",
+      "title": "早餐：沅保奶茶店",
+      "cat": "eat",
+      "place": {
+        "name": "沅保奶茶店",
+        "address": "235新北市中和區忠孝里華新街71號",
+        "lat": 24.9839742,
+        "lng": 121.50817699999999,
+        "placeId": "ChIJyUK0f24CaDQRDJUm0wCpGBY"
+      },
+      "note": ""
+    },
+    {
+      "id": "38kyxcyu",
+      "day": 2,
+      "start": "12:00",
+      "end": "",
+      "title": "烘爐地南山福德宮",
+      "cat": "outdoor",
+      "place": {
+        "name": "烘爐地南山福德宮",
+        "address": "235新北市中和區內南里興南路二段399巷160-1號",
+        "lat": 24.971790199999997,
+        "lng": 121.497645,
+        "placeId": "ChIJGwKL-VsCaDQRdL-5PNoFWhw"
+      },
+      "note": ""
+    },
+    {
+      "id": "fl2glk5x",
+      "day": 2,
+      "start": "16:00",
+      "end": "17:00",
+      "title": "林本源園邸",
+      "cat": "outdoor",
+      "place": {
+        "name": "林本源園邸",
+        "address": "220新北市板橋區留侯里西門街9號",
+        "lat": 25.011081400000002,
+        "lng": 121.4546023,
+        "placeId": "ChIJ-bWxkQKoQjQRclXL_gr5kbg"
+      },
+      "note": ""
+    },
+    {
+      "id": "o9vmg68y",
+      "day": 2,
+      "start": "15:00",
+      "end": "",
+      "title": "午餐：板橋",
+      "cat": "eat",
+      "place": null,
+      "note": ""
+    }
+  ]
+}
